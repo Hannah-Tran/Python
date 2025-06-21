@@ -1,0 +1,31 @@
+#  PRACTICE OPPORTUNITY
+# Assume that we have 3 clients who invested the following amounts in stocks earning 8% annually:** 
+# client_investments = [\\$400,000  \\$45,000   \\$60,000]**     
+# Complete the following tasks:**
+# 1. Write a For loop that iterates over each element in the "client_investments" List, calculates the annual returns and places the results in another list named "client_returns"** 
+# 2. Repeat the same operation using List Comprehension**
+# 3. Compare the results from step 1 and 2 and perform a sanity check**
+
+# Define a Python List
+client_investments = [400000, 45000, 60000]
+ 
+# Define a variable that holds the returns 
+returns = 0.08 
+7
+# Let's define another empty List named "client_returns" to store the output 
+client_returns = []
+ 
+# Now we will create a For loop that goes over every element in the input List, 
+# calculates the annual returns and places the results in another List named "client_returns"
+for x in client_investments:
+    client_returns.append(x * returns)
+ 
+print(client_returns)
+8
+# Repeat the same excercise using List Comprehension
+client_returns_list_comp = [ x * returns for x in client_investments]
+client_returns_list_comp
+9
+# Assertions are statements that are used for code debugging and for performing sanity checks 
+# Assertions are used to check if some condition is held True 
+assert client_returns == client_returns_list_comp
