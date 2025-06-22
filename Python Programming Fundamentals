@@ -70,3 +70,15 @@ print('The effective annual interest rate = {}%'.format(effective_rate * 100))
 amount_0 = 10000 # amount at year 0 (now!)
 print('The total interest earned by the end of year 1 = ${}'.format(effective_rate * amount_0)) 
 
+
+name = input("Welcome to the foreign currency exchange office, please enter your name: ")
+amount_SGD = input("Enter the amount you want to exchange: ")
+
+USD_SGD = 1.34
+NZD_USD = 0.62
+
+
+# You will need to You will need to calculate the NZD/SGD cross-rate which is NZD/USD × USD/SGD = 0.62 × 1.34 = 0.8308
+NZD_SGD = NZD_USD * USD_SGD
+amount_NZD = int(amount_SGD) / NZD_SGD
+print("Welcome {} to our office, the amount you want to exchange is SGD ${} which will be converted to NZD ${}".format(name, amount_SGD, amount_NZD))
