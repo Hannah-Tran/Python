@@ -1,0 +1,256 @@
+# PRACTICE: Write a Python code that performs the following tasks:
+# Filter out the Pandas DataFrame df to only select rows containing Apple data with Ticker Symbol 'AAPL'. Place the results in a new Pandas DataFrame titled apple_df.
+# Obtain the maximum quarterly revenue of Apple and the corresponding date
+# Perform a sanity check by comparing the calculated maximum quarterly revenue with numbers posted online on Yahoo Finance: https://ca.finance.yahoo.com/quote/AAPL/financials?p=AAPL
+
+# Let's filter out df DataFrame to only obtain Apple (Ticker: 'AAPL') data
+apple_df = df[ df['Ticker'] == 'AAPL' ]
+apple_df
+
+# Let's obtain the maximum value in the "Revenue" column
+# Perform a sanity check using Yahoo Finance: https://ca.finance.yahoo.com/quote/AAPL/financials?p=AAPL
+apple_df['Revenue'].max()
+
+# Let's display the row containing the maximum "Revenue"
+apple_df [apple_df['Revenue'] == apple_df['Revenue'].max()]
+
+
+
+
+#PRACTICE: Write a Python code that performs the following tasks:
+# Filter out the Pandas DataFrame df to only contain rows pertaining to Nvidia corporation (Ticker Symbol: NVDA)
+# Display the histogram for the output column "% Change in Quarterly EPS (Target Output)" for Nvidia corporation using 100 bins
+
+# Let's filter out the Pandas DataFrame "df" to only select Apple data (Ticker: 'AAPL')
+nvidia_df = df[ df['Ticker'] == 'NVDA' ]
+nvidia_df
+
+# Let's plot the histogram for the target output column for Nvidia 
+fig = px.histogram(nvidia_df[ '% Change in Quarterly EPS (Target Output)'] * 100, nbins = 100)
+fig.update_layout({'plot_bgcolor': "white"})
+
+
+
+# PRACTICE:Write a Python code that performs the following tasks:
+# Read the "financial_data.csv" file using Pandas and place the result in a Pandas DataFrame titled "df"
+# Filter "df" Pandas DataFrame to only include General Electric data (Ticker Symbol: GE), and place the results in a Pandas DataFrame titled "general_electric_df"
+# Perform one-hot encoding to the "Fiscal Period" column in "general_electric_df" DataFrame using Pandas pd.get_dummies() function
+# Drop the "Fiscal Period" column from "general_electric_df" DataFrame and concatenate the one-hot encoded data
+
+
+
+
+# Use Pandas to read financial data (the csv file is included in the course package) 
+df = pd.read_csv('financial_data.csv')
+
+# Let's filter out the Pandas DataFrame "df" to only select GE data
+general_electric_df = df[ df['Ticker'] == 'GE' ]
+general_electric_df
+
+# Let's display the one-hot encoded version of the "Fiscal Period" column
+fiscal_encoded = pd.get_dummies(general_electric_df['Fiscal Period'])
+fiscal_encoded
+
+# Drop the 'Fiscal Period' column from the Pandas DataFrame
+general_electric_df = general_electric_df.drop('Fiscal Period', axis = 1)
+
+# Concatenate the original DataFrame and the one-hot encoded "Fiscal Period" column
+general_electric_df = pd.concat([general_electric_df, fiscal_encoded], axis = 1)
+general_electric_df
+
+
+
+#PRACTICE: Using Scikit-Learn Library, split the data into 30% for testing and 70% for training
+#Perform a sanity check by obtaining the shape of the training and testing dataset
+#Enable shuffling and rerun the code. Comment on your results.
+
+# Let's perform train/test/validation data split
+# Drop the columns that we do not need for model training
+
+from sklearn.model_selection import train_test_split
+X_train, X_test, y_train, y_test = train_test_split(X, y, test_size = 0.3, shuffle = True)
+
+# Check out the shape of input data training, testing and validation 
+print(X_train.shape, X_test.shape)
+
+# Check out the shape of output data training, testing and validation 
+print(y_train.shape, y_test.shape)
+
+X_train
+
+X_test
+
+
+
+
+
+
+# PRACTICE:Set the fit_intercept attribute to False, retrain the multiple linear regression model and evaluate its performance
+# Display the estimated coefficients and Y-intercept. What do you conclude?
+# Hint: https://scikit-learn.org/stable/modules/generated/sklearn.linear_model.LinearRegression.html
+
+
+# Retrain the model after setting fit_intercept to False
+# Note that this will force the regression line to go through the origin (0,0)
+linear_regression_model = linear_model.LinearRegression(fit_intercept = False)
+linear_regression_model.fit(X_train, y_train)
+
+y_predict = linear_regression_model.predict(X_test)
+
+RMSE = float(np.sqrt(mean_squared_error(y_test, y_predict)))
+MSE = mean_squared_error(y_test, y_predict)
+MAE = mean_absolute_error(y_test, y_predict)
+
+print('Root Mean Squared Error (RMSE) =', RMSE, '\nMean Squared Error (MSE) =', MSE, '\nMean Absolute Error (MAE) =', MAE)
+
+# Display the trained model Y intercept
+print(linear_regression_model.intercept_)
+
+# Display the estimated coefficients for the linear regression problem
+print(linear_regression_model.coef_)
+
+
+
+
+# PRACTICE: Increase the maximum depth of the tree by setting max_depth = 100
+# Retrain the Random Forest Regression model and evaluate its performance
+
+# Train a Random Forest Regression model with larger max_depth
+# n_estimators: represents the number of trees in the forest
+# max_depth: represents the maximum depth of the tree
+random_forest_model = RandomForestRegressor(n_estimators = 5, max_depth = 100);
+random_forest_model.fit(X_train, y_train);
+
+# PRACTICE: Using Google Tensorflow Playground, perform the following tasks:
+# Select the spiral dataset and set the ratio of the training to test data to 70%/30%
+# Set the noise level to 20 and the batch size to 15
+# Choose an Artificial Neural Network with one hidden layer that contains 6 neurons and set the activation function to Rectified Linear Unit (ReLU). Train the model and record the training and test loss after 5000 epochs.
+# Modify the Artificial Neural Network architecture by adding 3 hidden layers with 8 neurons each. Retrain the model and record the training and test loss after 1000 epochs.
+# Assess both networks performance and comment on your results
+# Change the architecture of the existing Artificial Neural Network model by introducing an additional dense layer with Dropout. Feel free to choose the number of neurons.
+# Print the model summary and list the number of trainable parameters.
+
+from tensorflow.keras.models import Sequential
+from tensorflow.keras.layers import Dense, Normalization, Dropout
+
+ANN_model = Sequential()
+ANN_model.add(Normalization(input_shape = [X_train.shape[1],], axis = None))
+ANN_model.add(Dense(1024, activation = 'relu'))
+ANN_model.add(Dropout(0.3))
+ANN_model.add(Dense(512, activation = 'relu'))
+ANN_model.add(Dropout(0.3))
+ANN_model.add(Dense(256, activation = 'sigmoid'))
+ANN_model.add(Dropout(0.3))
+ANN_model.add(Dense(256, activation = 'sigmoid')) # additional layer
+ANN_model.add(Dropout(0.3))                       # additional layer
+ANN_model.add(Dense(32, activation = 'sigmoid'))
+ANN_model.add(Dropout(0.3))
+ANN_model.add(Dense(units = 1, activation = 'sigmoid'))
+ANN_model.summary()
+
+
+
+
+# PRACTICE: Set the max_depth hyperparameter to 1 and retrain the XGBoost model
+# Calculate regression metrics and comment on the results
+
+# Train an XGBoost regressor model 
+xgb_model = xgb.XGBRegressor(objective ='reg:squarederror', learning_rate = 0.1, max_depth = 1, n_estimators = 100)
+xgb_model.fit(X_train, y_train)
+
+# Make predictions on the test data
+y_predict = xgb_model.predict(X_test)
+
+
+RMSE = float(np.sqrt(mean_squared_error(y_test, y_predict)))
+MSE = mean_squared_error(y_test, y_predict)
+MAE = mean_absolute_error(y_test, y_predict)
+
+print('Root Mean Squared Error (RMSE) =', RMSE, '\nMean Squared Error (MSE) =', MSE, '\nMean Absolute Error (MAE) =', MAE) 
+
+
+
+
+# PRACTICE:
+# Train and evaluate an XGBoost algorithm to predict the percentage quarterly change in revenue instead of the percentage quarterly change in EPS. Note that this target variable is available in the original dataset and titled "% Change in Quarterly Revenue (Target Output)".
+Perform hyperparameters tuning and evaluate trained model performance and comment on the results.
+
+
+# Use Pandas to read financial data (the csv file is included in the course package) 
+df = pd.read_csv('financial_data.csv')
+
+# Let's filter out the Pandas DataFrame "df" to only select Apple data (Ticker: 'AAPL')
+apple_df = df[ df['Ticker'] == 'AAPL' ]
+apple_df
+
+# Drop the following columns from the Pandas DataFrame
+cols_to_drop = ['Ticker','Sector', 'Industry','Company Name', 'Report Date', 'Currency',
+                'Fiscal Year', 'Publish Date', 'Restated Date', '% Change in Quarterly EPS (Target Output)']
+
+apple_df = apple_df.drop(columns = cols_to_drop)
+
+# Let's display the one hot-encoded version of the "Fiscal Period" column
+fiscal_encoded = pd.get_dummies(apple_df['Fiscal Period'])
+
+# Drop the 'Fiscal Period' column from the Pandas DataFrame
+apple_df = apple_df.drop('Fiscal Period', axis = 1)
+
+# Concatenate the original DataFrame and the one hot encoded "Fiscal Period" column
+apple_df = pd.concat([apple_df, fiscal_encoded], axis = 1)
+
+# Split the data into input (X) and output (y)
+X = apple_df.drop('% Change in Quarterly Revenue (Target Output)', axis = 1)
+y = apple_df['% Change in Quarterly Revenue (Target Output)']
+
+from sklearn.model_selection import train_test_split
+X_train, X_test, y_train, y_test = train_test_split(X, y, test_size = 0.25, shuffle = False)
+
+# Train an XGBoost regressor model 
+xgb_model = xgb.XGBRegressor(objective ='reg:squarederror', learning_rate = 0.1, max_depth = 1, n_estimators = 50, subsample = 1.0);
+xgb_model.fit(X_train, y_train);
+
+# Make predictions on the test data
+y_predict = xgb_model.predict(X_test)
+y_predict
+
+# Let's generate various regression metrics by comparing "y_predict" vs. actual outputs "y_test" (ground truth data)
+from sklearn.metrics import mean_squared_error, mean_absolute_error
+import numpy as np 
+
+RMSE = float(np.sqrt(mean_squared_error(y_test, y_predict)))
+MSE = mean_squared_error(y_test, y_predict)
+MAE = mean_absolute_error(y_test, y_predict)
+
+print('Root Mean Squared Error (RMSE) =', RMSE, '\nMean Squared Error (MSE) =', MSE, '\nMean Absolute Error (MAE) =', MAE) 
+
+# Specify the parameters grid
+parameters_grid = {'max_depth': [1, 3, 5, 10],
+                   'learning_rate': [0.01, 0.1, 0.5, 1],
+                   'n_estimators': [10, 50, 100, 200],
+                   'subsample': [0.5, 0.75, 1.0]} 
+
+# Note that "neg_mean_squared_error" is used for scoring since our goal is to minimize the error
+# GridSearchCV() ranks all algorithms (estimators) and specifies which one is the best
+# cv stands for the number of cross-validation folds which is set to 5 by default
+# Verbose controls the verbosity: the higher the number, the more messages to be displayed
+
+xgb_gridsearch = GridSearchCV(estimator = xgb.XGBRegressor(objective = 'reg:squarederror'), 
+                              param_grid = parameters_grid, 
+                              scoring = 'neg_mean_squared_error',  
+                              cv = 5, 
+                              verbose = 5)
+
+xgb_gridsearch.fit(X_train, y_train);
+# Generate predictions based on the optimal model parameters
+y_predict = xgb_gridsearch.predict(X_test)
+y_predict
+
+# Let's generate various regression metrics by comparing "y_predict" vs. actual outputs "y_test" (ground truth data)
+from sklearn.metrics import mean_squared_error, mean_absolute_error
+import numpy as np 
+
+RMSE = float(np.sqrt(mean_squared_error(y_test, y_predict)))
+MSE = mean_squared_error(y_test, y_predict)
+MAE = mean_absolute_error(y_test, y_predict)
+
+print('Root Mean Squared Error (RMSE) =', RMSE, '\nMean Squared Error (MSE) =', MSE, '\nMean Absolute Error (MAE) =', MAE) 
