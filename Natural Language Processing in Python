@@ -1,0 +1,110 @@
+#PRACTICE: Display the last 10 samples in the Pandas DataFrame df
+#Perform a sanity check by displaying the last 10 rows data along with the corresponding label
+
+# Use the tail() method to display the last 10 elements in the Pandas DataFrame
+df.tail(10)
+# Let's display the length of the Pandas DataFrame
+len(df)
+# Print the last 10 samples from the Pandas DataFrame and Perform a sanity check
+for i in range(len(df)-10, len(df), 1):
+    print('Data: {}'.format(df.iloc[i]['Text']))
+    print('Label: {}'.format(df.iloc[i]['Label']))     
+    print('\n')
+
+PRACTICE: Generate a word cloud visualization for text containing positive sentiment
+# Generate word cloud visualization for text with positive sentiment
+generate_word_cloud(" ".join(df[df['Label'] == 'positive']['Cleaned Text']))
+
+
+
+#PRACTICE: Encode/Tokenize the following two statements:
+#"JPMorgan Sees 70% Upside for These 2 Auto Stocks in 2023"
+#"JPMorgan, Goldman Say Stocks Recovery Won’t Be Easy in 2023"
+
+# Tokenize sample dataset #1
+encoded_1 = tokenizer.encode("JPMorgan Sees 70% Upside for These 2 Auto Stocks in 2023")
+print(encoded_1)
+
+# Tokenize sample dataset #2
+encoded_2 = tokenizer.encode("JPMorgan, Goldman Say Stocks Recovery Won’t Be Easy in 2023")
+print(encoded_2)
+
+
+# PRACTICE: Perform tokenization and padding to the following text data:
+# "Emerging market stocks extended their lead over US shares in the early days of the new year, with the equity benchmark rising to a six-month high against the S&P 500 Index"
+# "Cape Town-based Naspers, founded more than 100 years ago, bought its 33% stake in Tencent in 2004 for just $231 million. That shareholding has since soared almost 50,000% in value to today’s $114 billion"
+# "Amazon lost half its value this year as tech stocks got crushed and recession fears grew"
+
+news_1 = "Emerging market stocks extended their lead over US shares in the early days of the new year, with the equity benchmark rising to a six-month high against the S&P 500 Index"
+news_2 = "Cape Town-based Naspers, founded more than 100 years ago, bought its 33% stake in Tencent in 2004 for just $231 million. That shareholding has since soared almost 50,000% in value to today’s $114 billion"
+news_3 = "Amazon lost half its value in 2022 as tech stocks got crushed and recession fears grew"
+
+# Let's encode the data first
+
+from transformers import AutoTokenizer, AutoModelForSequenceClassification
+tokenizer = AutoTokenizer.from_pretrained("ProsusAI/finbert")
+
+encoded_news_1 = tokenizer.encode(news_1)
+encoded_news_2 = tokenizer.encode(news_2)
+encoded_news_3 = tokenizer.encode(news_3)
+print(encoded_news_3)
+
+# Let's perform padding
+import torch
+from torch.nn.utils.rnn import pad_sequence
+padded_sequence = pad_sequence([torch.tensor(encoded_news_1), torch.tensor(encoded_news_2), torch.tensor(encoded_news_3)], batch_first = True, padding_value = 0).numpy()
+padded_sequence
+
+
+
+# PRACTICE: Using Scikit-Learn library, split the data into 15% for testing, 15% for validation and 70% for training while enabling shuffling.
+# How many samples are present in the training, validation and testing subsets?
+
+# Let's use Scikit-Learn to split the data into training, validation and testing subsets
+from sklearn.model_selection import train_test_split
+X_train, X_test, y_train, y_test = train_test_split(X, y, test_size = 0.3, shuffle = False)
+X_test, X_val, y_test, y_val = train_test_split(X_test, y_test, test_size = 0.5, shuffle = False)
+
+
+# Let's check out the shape of the training, validation and testing subsets 
+print(X_train.shape)
+print(X_test.shape)
+print(X_val.shape)
+
+print(y_train.shape)
+print(y_test.shape)
+print(y_val.shape)
+
+
+
+# PRACTICE: Change the architecture of the LSTM network by using 512 units instead of 64
+# Print the model summary
+# How many trainable parameters does this new network have?
+
+# 64 units: 23,665,859 trainable parameters 
+# 512 units: 26,158,083 trainable parameters 
+
+
+
+# PRACTICE:
+# Change the architecture of the LSTM network by using 512 units instead of 64
+# Retrain the network and recalculate the model accuracy
+
+# LSTM Test Accuracy with 64 units = 75.55%
+# LSTM Test Accuracy with 512 units = 74.55%
+
+#PRACTICE:
+# 1. Using the hosted inference API available on Hugging Face (https://huggingface.co/ProsusAI/finbert), test the pre-trained FinBERT model using the following news text data:
+# "Emerging market stocks extended their lead over US shares in the early days of the new year, with the equity benchmark rising to a six-month high against the S&P 500 Index"
+# "Cape Town-based Naspers, founded more than 100 years ago, bought its 33% stake in Tencent in 2004 for just $231 million. That shareholding has since soared almost 50,000% in value to today’s $114 billion"
+# "Amazon lost half its value this year as tech stocks got crushed and recession fears grew"
+# 2. Repeat task 1 using the sentiment_pipeline
+
+# Let's test the pre-trained language model 
+news_1 = "Emerging market stocks extended their lead over US shares in the early days of the new year, with the equity benchmark rising to a six-month high against the S&P 500 Index"
+news_2 = "Cape Town-based Naspers, founded more than 100 years ago, bought its 33% stake in Tencent in 2004 for just $231 million. That shareholding has since soared almost 50,000% in value to today’s $114 billion"
+news_3 = "Amazon lost half its value this year as tech stocks got crushed and recession fears grew"
+
+sentiment_pipeline(news_3)
+
+
