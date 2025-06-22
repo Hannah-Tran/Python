@@ -1,0 +1,103 @@
+# PRACTICE OPPORTUNITY:
+# Load the annual cashflow statements for US companies using SimFin and store them in cashflow_annual_df Pandas DataFrame
+# What is the memory usage of the cashflow_annual_df Pandas DataFrame?
+#PRACTICE
+# Let's load annual cashflow statements for US companies
+cashflow_annual_df = sf.load_cashflow(variant = 'annual', market = 'us').reset_index()
+cashflow_annual_df
+
+# Use the info method to show Pandas DataFrame information
+cashflow_annual_df.info()
+
+
+
+
+
+
+#PRACTICE: Using Pandas, load U.S. companies information contained in the "companies_information.csv" file and store it in a Pandas DataFrame titled "companies_info_df"
+#Use the head() method to display the first 15 rows in the "companies_info_df" Pandas DataFrame
+#What is the ticker symbol and SimFinId for APPLE INC?
+
+# Let's use Pandas to read the CSV file that contains companies information 
+companies_info_df = pd.read_csv('companies_information.csv')
+companies_info_df
+
+# Let's use Pandas to read the CSV file that contains companies information 
+companies_info_df = pd.read_csv('companies_information.csv')
+companies_info_df
+
+# Apple SimFinID is 111052
+companies_info_df.head(15)
+
+# You can read APPLE INC information directly from the Pandas DataFrame 
+# Alternatively, you can filter out the Pandas DataFrame as follows
+companies_info_df[ companies_info_df['Company Name'] == 'APPLE INC' ] 
+
+
+
+
+#PRACTICE : Display the first 70 rows in "industries_info_df" and "companies_info_df" Pandas DataFrames
+#Merge the "industries_info_df" and "companies_info_df" Pandas DataFrames using "right" join type instead of "left" and place the answer in a new Pandas DataFrame titled "companies_industries_right_df"
+
+industries_info_df.head(70)
+companies_info_df.head(70)
+# Let's merge industries and companies information using the right join
+companies_industries_right_df = pd.merge(companies_info_df, industries_info_df, on = 'IndustryId', how = 'right')
+companies_industries_right_df.head(70)
+
+
+
+#PRACTICE OPPORTUNITY :
+
+# Write a Python code that performs the following tasks:
+#  Filter rows in "merged_df" Pandas DataFrame to only include Amazon data with Ticker Symbol 'AMZN'. Place the output in a Pandas DataFrame titled "amazon_df"
+#  Count the number of missing values in every column in "amazon_df" Pandas DataFrame
+# Calculate the percentage of missing values in every column in "amazon_df" Pandas DataFrame
+#  Handle missing values in "amazon_df" Pandas DataFrame by dropping columns containing more than 50% of Null values
+#  Replace missing values with the median column value if missing values represent less than 50% of a given column
+# Perform a sanity check to ensure that all missing values have been properly handled
+
+amazon_df = merged_df[merged_df['Ticker'] == 'AMZN'].reset_index(drop = True)
+
+# Let's sum up all missing values
+amazon_df.isnull().sum()
+
+# Let's calculate the percentage of missing values in each column
+percentage_missing  = amazon_df.isnull().sum() * 100 / len(amazon_df)
+percentage_missing_df = pd.DataFrame({'% Missing': percentage_missing}).reset_index()
+percentage_missing_df
+
+# Let's create a list of columns that contain a large number of missing values above 50% for example
+columns_to_drop = percentage_missing_df[ percentage_missing_df['% Missing'] > 50 ]['index'].tolist()
+columns_to_drop
+
+# Let's drop features (columns) that have more than 50% missing values
+amazon_df = amazon_df.drop(columns = columns_to_drop)
+amazon_df
+
+# Let's check if we still have any missing values
+amazon_df.isnull().sum()
+
+# You can use fillna() to fill a given column with a certain value
+amazon_df['Change in Accounts Receivable'].fillna(amazon_df['Change in Accounts Receivable'].median(), inplace = True)
+amazon_df['Change in Inventories'].fillna(amazon_df['Change in Inventories'].median(), inplace = True)
+amazon_df['Change in Accounts Payable'].fillna(amazon_df['Change in Accounts Payable'].median(), inplace = True)
+amazon_df['Change in Other'].fillna(amazon_df['Change in Other'].median(), inplace = True)
+
+# Let's check if we still have any missing values
+amazon_df.isnull().sum()
+
+# PRACTICE: Write a Python code that performs the following tasks:
+# Filter rows in "merged_df" Pandas DataFrame to only include Amazon data with Ticker Symbol 'AMZN'. Place the output in a Pandas DataFrame titled "amazon_df"
+# Perform one-hot encoding to the "Fiscal Period" column in the "amazon_df" using Pandas pd.get_dummies()
+amazon_df = merged_df[merged_df['Ticker'] == 'AMZN'].reset_index(drop = True)
+# Let's calculate the one-hot encoded version of the "Fiscal Period" column
+amazon_fiscal_encoded = pd.get_dummies(amazon_df['Fiscal Period'])
+amazon_fiscal_encoded
+
+PRACTICE: Write a Python code that creates a new feature to capture the quarterly percentage change in the "Total Assets" column. Place the output in a new column titled "Total Assets change from last quarter".
+# Let's perform feature engineering by creating a new feature that can capture the % quarterly change in Total Assets
+# pct_change() calculates the change is percentage from last quarter to current quarter
+
+apple_df['Total Assets change from last quarter'] = apple_df['Total Assets'].pct_change()
+apple_df
