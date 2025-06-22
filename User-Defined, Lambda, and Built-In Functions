@@ -1,0 +1,39 @@
+# Let's define a Python function that multiplies two inputs
+def multiply(x, y):
+    z = x * y
+# Call the Python function 
+multiply(2, 5)
+# Let's see how to leverage Lambda functions to peform the same operation 
+# Lambda expression is represented as follows:
+z = lambda x, y : x * y
+# Lambda function call
+z(2, 5)
+# Let's explore some Python built-in functions
+# Let's define a Python List
+company_revenue = [600000, 900000, 1000000, 1100000, 1500000]
+
+# Let's obtain the the number of companies available in our Python List using the len() Built-in Function 
+len(company_revenue)
+# The max() function is used to find the maximum value in a given Python List
+max(company_revenue)
+# The min() function is used to find the minimum value in a given Python List
+min(company_revenue)
+
+
+#PRACTICE OPPORTUNITY SOLUTION:
+
+#1. Define a Lambda function that calculates the effective interest rate given the annual interest rate and the number of compounding periods.
+#2. Assume you deposited $10,000 today into an account paying 6% compounded monthly, what is the expected effective rate of return?
+#3. How much interest would you have earned by the end of the year?
+#Hint: effective_rate = ((1 + (interest/period per year)) ^ period per year) - 1
+
+# Let's leverage Lambda functions to calculate the effective annual interest rate 
+effective_interest_rate = lambda interest, period: ((1 + (interest/period)) ** period) - 1
+
+# Lambda function call
+effective_rate = effective_interest_rate(0.06, 12)
+print('The effective annual interest rate = {}%'.format(effective_rate * 100))
+
+# Let's calculate the total interest earned on the invested $10,000 by the end of year 1
+amount_0 = 10000 # amount at year 0 (now!)
+print('The total interest earned by the end of year 1 = ${}'.format(effective_rate * amount_0)) 
